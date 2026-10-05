@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-<title>Segeln AG 2026/27 – Kartenstudio</title>
+<title>Segeln AG 2026 – Kartenstudio</title>
 
 <style>
 
@@ -739,56 +739,6 @@ button {
 
 .card.rare .rareText {
     display: block;
-}
-
-
-/* =========================================================
-   ICONS RECHTS
-========================================================= */
-
-.cardIcons {
-
-    position: absolute;
-
-    top: 36px;
-
-    right: 25px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 8px;
-
-    z-index: 16;
-}
-
-.cardIcon {
-
-    width: 43px;
-    height: 43px;
-
-    border:
-        2px solid
-        rgba(255,255,255,.88);
-
-    border-radius: 50%;
-
-    display: grid;
-
-    place-items: center;
-
-    background:
-        rgba(255,255,255,.08);
-
-    backdrop-filter:
-        blur(5px);
-
-    font-size: 18px;
-
-    box-shadow:
-        0 3px 10px
-        rgba(0,0,0,.12);
 }
 
 
@@ -2742,9 +2692,7 @@ button:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 8px
 input,textarea,select{border-color:rgba(78,231,255,.2)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important}
 .section,.panel,.editor-card,.preview-panel{border-color:rgba(78,231,255,.12)!important;box-shadow:0 18px 45px rgba(0,0,0,.18)!important}
 @media print{body:before{display:none}.card:hover{transform:none}.card:after{display:none}}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</head>
+</style></head>
 
 
 <body>
@@ -2762,13 +2710,13 @@ input,textarea,select{border-color:rgba(78,231,255,.2)!important;box-shadow:inse
     <div class="logoArea">
 
         <div class="logoIcon">
-            ⛵
+            
         </div>
 
         <div>
 
             <div class="logo">
-                Segeln AG 2026/27
+                Segeln AG 2026
             </div>
 
             <div class="logoSub">
@@ -2937,17 +2885,17 @@ input,textarea,select{border-color:rgba(78,231,255,.2)!important;box-shadow:inse
 
 
                     <div class="backLogo">
-                        ⛵ SEGELN AG
+                         SEGELN AG
                     </div>
 
 
                     <div class="backCenter">
-                        ⛵
+                        
                     </div>
 
 
                     <div class="backProject">
-                        Segeln AG 2026/2027
+                        Segeln AG 2026
                     </div>
 
 
@@ -3387,12 +3335,12 @@ input,textarea,select{border-color:rgba(78,231,255,.2)!important;box-shadow:inse
             onclick="downloadPDF()"
             style="margin-top:10px;background:linear-gradient(135deg,#168aad,#0077b6);">
 
-            ⬇️ PDF sofort herunterladen
+            ⬇️ PDF speichern
 
         </button>
 
         <div style="margin-top:8px;font-size:11px;opacity:.65;line-height:1.4;">
-            Der Direkt-Download benötigt eine Internetverbindung für die PDF-Bibliothek.
+            Beim Speichern als PDF im Druckdialog bleiben Größe und Drucklayout erhalten.
         </div>
 
     </div>
@@ -3459,7 +3407,7 @@ input,textarea,select{border-color:rgba(78,231,255,.2)!important;box-shadow:inse
 
 <footer class="footer">
 
-    Segeln AG 2026/27 · 
+    Segeln AG 2026 · 
 
 </footer>
 
@@ -5204,93 +5152,30 @@ function printCards() {
     setTimeout(() => window.print(), 250);
 }
 
-async function downloadPDF() {
+function downloadPDF() {
     if (!printCardsList.length) {
         alert("Füge zuerst mindestens eine Karte zur Druckliste hinzu.");
         return;
     }
 
-    if (!window.jspdf || !window.html2canvas) {
-        alert("Die PDF-Funktion konnte nicht geladen werden. Bitte Internetverbindung prüfen und die Seite neu laden.");
-        return;
-    }
-
     const printSheet = buildPrintSheet();
-    const pages = [...printSheet.querySelectorAll(".printPage")];
-    if (!pages.length) return;
+    if (!printSheet || !printSheet.querySelector(".printPage")) return;
 
-    // html2canvas uses screen media, so temporarily copy the page's print CSS
-    // into a normal stylesheet for the PDF render. This keeps the PDF layout
-    // identical to the normal browser print layout.
-    const pdfStyle = document.createElement("style");
-    let printCss = "";
-    for (const sheet of [...document.styleSheets]) {
-        try {
-            for (const rule of [...sheet.cssRules]) {
-                if (rule.type === CSSRule.MEDIA_RULE && rule.media.mediaText.includes("print")) {
-                    for (const child of [...rule.cssRules]) printCss += child.cssText + "\n";
-                }
-            }
-        } catch (e) {}
-    }
-    pdfStyle.textContent = printCss;
-    document.head.appendChild(pdfStyle);
+    const oldTitle = document.title;
+    document.title = "Segeln AG 2026 Druckbogen";
 
-    const oldDisplay = printSheet.style.display;
-    const oldPosition = printSheet.style.position;
-    const oldLeft = printSheet.style.left;
-    const oldTop = printSheet.style.top;
-    const oldZ = printSheet.style.zIndex;
-    const oldWidth = printSheet.style.width;
-    const oldBackground = printSheet.style.background;
+    const restore = () => {
+        document.title = oldTitle;
+        window.removeEventListener("afterprint", restore);
+    };
 
-    printSheet.style.display = "block";
-    printSheet.style.position = "fixed";
-    printSheet.style.left = "0";
-    printSheet.style.top = "0";
-    printSheet.style.zIndex = "-1";
-    printSheet.style.width = "210mm";
-    printSheet.style.background = "white";
+    window.addEventListener("afterprint", restore);
 
-    // Give the browser a frame to finish layout and image decoding.
-    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4",
-        compress: true
-    });
-
-    for (let i = 0; i < pages.length; i++) {
-        const canvas = await html2canvas(pages[i], {
-            scale: 2.5,
-            useCORS: true,
-            allowTaint: false,
-            backgroundColor: "#ffffff",
-            logging: false
-        });
-
-        if (i > 0) pdf.addPage("a4", "portrait");
-
-        const image = canvas.toDataURL("image/jpeg", 0.96);
-        pdf.addImage(image, "JPEG", 0, 0, 210, 297, undefined, "FAST");
-    }
-
-    // Restore the hidden print sheet after rendering.
-    printSheet.style.display = oldDisplay;
-    printSheet.style.position = oldPosition;
-    printSheet.style.left = oldLeft;
-    printSheet.style.top = oldTop;
-    printSheet.style.zIndex = oldZ;
-    printSheet.style.width = oldWidth;
-    printSheet.style.background = oldBackground;
-    pdfStyle.remove();
-
-    const stamp = new Date().toISOString().slice(0,19).replace(/[T:]/g,"-");
-    pdf.save(`Segeln_AG_2026-27_Druckbogen_${stamp}.pdf`);
+    // Browser-Druck verwendet direkt das vorhandene Print-CSS.
+    // Dadurch wird nichts als JPEG/Canvas gerastert und das 1:1-Kartenlayout bleibt erhalten.
+    setTimeout(() => window.print(), 250);
 }
+
 
 
 /* =========================================================
