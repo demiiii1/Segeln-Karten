@@ -2410,7 +2410,7 @@ button {
 }
 
 .card .frontSide::before {
-    content: "SEGELN AG  •  2026 Klasse 10";
+    content: "SEGELN AG  •  2026";
     position: absolute;
     top: 22px;
     left: 36px;
@@ -2692,7 +2692,17 @@ button:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 8px
 input,textarea,select{border-color:rgba(78,231,255,.2)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important}
 .section,.panel,.editor-card,.preview-panel{border-color:rgba(78,231,255,.12)!important;box-shadow:0 18px 45px rgba(0,0,0,.18)!important}
 @media print{body:before{display:none}.card:hover{transform:none}.card:after{display:none}}
-</style></head>
+
+<style id="no-card-shadow">
+.card,
+.card:hover,
+.card.rare,
+.card.rare:hover {
+    box-shadow: none !important;
+}
+</style>
+</style><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
 
 
 <body>
@@ -3336,6 +3346,15 @@ input,textarea,select{border-color:rgba(78,231,255,.2)!important;box-shadow:inse
             style="margin-top:10px;background:linear-gradient(135deg,#168aad,#0077b6);">
 
             ⬇️ PDF speichern
+
+        </button>
+
+        <button
+            class="printButton"
+            onclick="downloadPNG()"
+            style="margin-top:10px;background:linear-gradient(135deg,#16a34a,#15803d);">
+
+            🖼️ Karte als PNG speichern
 
         </button>
 
@@ -5150,6 +5169,38 @@ function buildPrintSheet() {
 function printCards() {
     buildPrintSheet();
     setTimeout(() => window.print(), 250);
+}
+
+
+async function downloadPNG() {
+    const card = document.getElementById("card");
+
+    if (!card) {
+        alert("Karte wurde nicht gefunden.");
+        return;
+    }
+
+    if (typeof html2canvas === "undefined") {
+        alert("PNG-Export konnte nicht geladen werden.");
+        return;
+    }
+
+    try {
+        const canvas = await html2canvas(card, {
+            scale: 3,
+            useCORS: true,
+            backgroundColor: null,
+            logging: false
+        });
+
+        const link = document.createElement("a");
+        link.download = "Segeln-AG-2026.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    } catch (error) {
+        console.error(error);
+        alert("Die Karte konnte nicht als PNG gespeichert werden.");
+    }
 }
 
 function downloadPDF() {
