@@ -376,7 +376,7 @@ button {
     position: relative;
 
     width: 390px;
-    height: 546px;
+    height: 600px;
 
     overflow: hidden;
 
@@ -1725,15 +1725,15 @@ button {
 
         box-sizing: border-box;
 
-        padding: 6.5mm 4.5mm;
+        padding: 6mm 13mm;
 
-        grid-template-columns: repeat(3, 67mm);
+        grid-template-columns: repeat(2, 87mm);
 
-        grid-template-rows: repeat(3, 92mm);
+        grid-template-rows: repeat(5, 57mm);
 
-        column-gap: 1mm;
+        column-gap: 10mm;
 
-        row-gap: 1mm;
+        row-gap: 0;
 
         align-content: start;
 
@@ -1776,13 +1776,13 @@ button {
 
         position: relative;
 
-        width: 67mm;
+        width: 87mm;
 
-        height: 92mm;
+        height: 57mm;
 
         overflow: visible;
 
-        padding: 2mm;
+        padding: 1mm;
 
         box-sizing: border-box;
 
@@ -2616,8 +2616,8 @@ button {
 
 @media print {
     .printEmpty {
-        width: 67mm;
-        height: 92mm;
+        width: 87mm;
+        height: 57mm;
         background: white !important;
         border: 0 !important;
         box-shadow: none !important;
@@ -2638,17 +2638,17 @@ button {
 /* =========================================================
    PRINT RENDER SOURCE = LIVE CARD
    DUPLEX = LONG EDGE
-   Front: normal 3x3 order.
-   Back: horizontal position mirror (columns reversed).
+   Front: normal 2x5 order.
+   Back: horizontal position mirror (2 columns reversed).
    The printable front/back is the real .card component,
-   uniformly scaled from the 390x546px live preview.
+   rotated 90° right into the 85x55mm credit-card format.
 ========================================================= */
 @media print {
     .printCard {
         position: relative !important;
-        width: 67mm !important;
-        height: 92mm !important;
-        padding: 2mm !important;
+        width: 87mm !important;
+        height: 57mm !important;
+        padding: 1mm !important;
         box-sizing: border-box !important;
         overflow: hidden !important;
         background: transparent !important;
@@ -2664,13 +2664,13 @@ button {
 
     .printLiveCard {
         position: absolute !important;
-        left: 2mm !important;
-        top: 2mm !important;
-        width: 390px !important;
-        height: 546px !important;
+        left: 1mm !important;
+        top: 1mm !important;
+        width: 55mm !important;
+        height: 85mm !important;
         margin: 0 !important;
         padding: 0 !important;
-        transform: scale(0.61054) !important;
+        transform: rotate(90deg) translateY(-85mm) !important;
         transform-origin: top left !important;
         box-shadow: none !important;
         transition: none !important;
@@ -5032,7 +5032,7 @@ function buildPrintSheet() {
     printSheet.innerHTML = "";
 
     // Die Druckliste wird auf einzelne Karten erweitert.
-    // Beispiel: 9 Karten × 10 = 90 Karten = 10 A4-Bögen.
+    // Beispiel: 10 Karten × 10 = 100 Karten = 10 A4-Bögen.
     const cardsToPrint = [];
     let skippedEmptyCards = 0;
     printCardsList.forEach(item => {
@@ -5123,16 +5123,16 @@ function buildPrintSheet() {
         return cardElement;
     }
 
-    // 9 Karten pro Vorderseite und die passenden 9 Rückseiten.
+    // 10 Karten pro Vorderseite und die passenden 10 Rückseiten.
     // Die Rückseite wird für Duplex-Druck spaltenweise gespiegelt.
-    for (let pageStart = 0; pageStart < cardsToPrint.length; pageStart += 9) {
-        const group = cardsToPrint.slice(pageStart, pageStart + 9);
+    for (let pageStart = 0; pageStart < cardsToPrint.length; pageStart += 10) {
+        const group = cardsToPrint.slice(pageStart, pageStart + 10);
 
         const frontPage = document.createElement("div");
         frontPage.className = "printPage frontPage";
         group.forEach(data => frontPage.appendChild(makeCard(data, false)));
 
-        while (frontPage.children.length < 9) {
+        while (frontPage.children.length < 10) {
             const empty = document.createElement("div");
             empty.className = "printEmpty";
             frontPage.appendChild(empty);
@@ -5147,13 +5147,13 @@ function buildPrintSheet() {
         // So liegt nach dem Wenden des A4-Bogens jede Rückseite exakt hinter
         // der zugehörigen Vorderseite.
         const backCards = group.map(data => makeCard(data, true));
-        for (let row = 0; row < 3; row++) {
-            const rowCards = backCards.slice(row * 3, row * 3 + 3);
+        for (let row = 0; row < 5; row++) {
+            const rowCards = backCards.slice(row * 2, row * 2 + 2);
             rowCards.reverse();
             rowCards.forEach(c => backPage.appendChild(c));
         }
 
-        while (backPage.children.length < 9) {
+        while (backPage.children.length < 10) {
             const empty = document.createElement("div");
             empty.className = "printEmpty";
             backPage.appendChild(empty);
