@@ -5181,7 +5181,7 @@ async function downloadPNG() {
     }
 
     if (typeof html2canvas === "undefined") {
-        alert("PNG-Export konnte nicht geladen werden.");
+        alert("PNG-Export konnte nicht geladen werden. Bitte Seite einmal neu laden.");
         return;
     }
 
@@ -5189,16 +5189,35 @@ async function downloadPNG() {
         const canvas = await html2canvas(card, {
             scale: 3,
             useCORS: true,
+            allowTaint: false,
             backgroundColor: null,
             logging: false
         });
 
-        const link = document.createElement("a");
-        link.download = "Segeln-AG-2026.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+        canvas.toBlob(function(blob) {
+            if (!blob) {
+                alert("PNG konnte nicht erstellt werden.");
+                return;
+            }
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "Segeln-AG-2026.png";
+            link.style.display = "none";
+
+            document.body.appendChild(link);
+            link.click();
+
+            setTimeout(function() {
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }, 1000);
+        }, "image/png");
+
     } catch (error) {
-        console.error(error);
+        console.error("PNG-Export:", error);
         alert("Die Karte konnte nicht als PNG gespeichert werden.");
     }
 }
