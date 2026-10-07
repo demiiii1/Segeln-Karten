@@ -375,8 +375,8 @@ button {
 
     position: relative;
 
-    width: 390px;
-    height: 600px;
+    width: 550px;
+    height: 355.882px;
 
     overflow: hidden;
 
@@ -1782,7 +1782,7 @@ button {
 
         overflow: visible;
 
-        padding: 1mm;
+        padding: 2mm;
 
         box-sizing: border-box;
 
@@ -2344,10 +2344,10 @@ button {
     .card {
 
         width:
-            min(390px, 92vw);
+            min(550px, 92vw);
 
         height:
-            min(546px, 129vw);
+            min(355.882px, 59.64vw);
     }
 
     .photoWindow {
@@ -2639,16 +2639,16 @@ button {
    PRINT RENDER SOURCE = LIVE CARD
    DUPLEX = LONG EDGE
    Front: normal 2x5 order.
-   Back: horizontal position mirror (2 columns reversed).
+   Back: horizontal position mirror (columns reversed).
    The printable front/back is the real .card component,
-   rotated 90° right into the 85x55mm credit-card format.
+   uniformly scaled from the 390x546px live preview.
 ========================================================= */
 @media print {
     .printCard {
         position: relative !important;
         width: 87mm !important;
         height: 57mm !important;
-        padding: 1mm !important;
+        padding: 2mm !important;
         box-sizing: border-box !important;
         overflow: hidden !important;
         background: transparent !important;
@@ -2666,11 +2666,11 @@ button {
         position: absolute !important;
         left: 1mm !important;
         top: 1mm !important;
-        width: 55mm !important;
-        height: 85mm !important;
+        width: 85mm !important;
+        height: 55mm !important;
         margin: 0 !important;
         padding: 0 !important;
-        transform: rotate(90deg) translateY(-85mm) !important;
+        transform: none !important;
         transform-origin: top left !important;
         box-shadow: none !important;
         transition: none !important;
@@ -3326,7 +3326,7 @@ input,textarea,select{border-color:rgba(78,231,255,.2)!important;box-shadow:inse
 
             <br><br>
 
-            Pro Seite werden <strong>9 Karten</strong> im Endformat <strong>63 × 88 mm</strong> angeordnet.
+            Pro Seite werden <strong>10 Karten</strong> im Endformat <strong>85 × 55 mm</strong> angeordnet.
             Der Druckbogen verwendet <strong>2 mm Beschnitt</strong> und ist für beidseitigen Duplexdruck vorbereitet.
 
         </div>
@@ -3373,7 +3373,7 @@ input,textarea,select{border-color:rgba(78,231,255,.2)!important;box-shadow:inse
 
         <div class="printListInfo">
             Erstelle verschiedene Karten und füge sie hier hinzu. Bei jeder Karte kannst du festlegen,
-            wie oft sie gedruckt werden soll. Pro A4-Seite passen 9 Karten.
+            wie oft sie gedruckt werden soll. Pro A4-Seite passen 10 Karten.
         </div>
 
         <button class="printListAdd" onclick="addCurrentCardToPrintList()">
